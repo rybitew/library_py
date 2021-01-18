@@ -24,7 +24,6 @@ def book_service(request: Request):
     if request.method == 'GET':
         title = request.query_params.get('title')
         author = request.query_params.get('author')
-        books = None
         if title is not None and author is not None:
             books = list(Book.objects.raw('SELECT b.* FROM quickstart_book b '
                                           'JOIN quickstart_book_authors ba ON b.id = ba.book_id '
