@@ -29,7 +29,7 @@ class BookReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ['title', 'genre', 'published', 'authors']
+        fields = ['id', 'title', 'genre', 'published', 'authors']
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -37,4 +37,4 @@ class AuthorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Author
-        fields = ['name', 'books']
+        fields = ['id', 'name', 'books']

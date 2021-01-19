@@ -1,13 +1,10 @@
-from django.db.models.query import QuerySet
 from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.parsers import JSONParser
-from rest_framework.renderers import JSONRenderer
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from quickstart.models import Book, Author
-from quickstart.serializers import BookWriteSerializer, BookReadSerializer
+from quickstart.serializers import BookWriteSerializer, BookReadSerializer, AuthorSerializer
 
 
 @api_view(['GET'])
@@ -48,19 +45,34 @@ def book_service(request: Request):
 
     elif request.method == 'POST':
         authors = list(Author.objects.filter(name__in=request.data.get('authors')))
+        authorIds = []
         if len(authors) > 0:
-            authorIds = []
             for author in authors:
                 authorIds.append(author.id)
+        else:
+            for name in request.data.get('authors'):
+                author = {
+                    "name": name,
+                    "books": list()
+                }
+                authors.append(author)
+            authorSerializer = AuthorSerializer(data=authors, many=True)
+            if authorSerializer.is_valid():
+                authorSerializer.save()
 
-            book: dict = request.data
-            book.__setitem__('authors', authorIds)
+                for author in authorSerializer.data:
+                    authorIds.append(author.get('id'))
+            print('ERROR: book_service', authorSerializer.error_messages)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-            serializer = BookWriteSerializer(data=book)
+        book: dict = request.data
+        book['authors'] = authorIds
 
-            if serializer.is_valid():
-                serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
-            print('ERROR: book_service', serializer.error_messages)
+        serializer = BookWriteSerializer(data=book)
 
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+
+        print('ERROR: book_service', serializer.error_messages)
         return Response(status=status.HTTP_400_BAD_REQUEST)
