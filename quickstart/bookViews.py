@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
@@ -16,7 +17,13 @@ def get_all(request):
     return Response()
 
 
-@api_view(['GET', 'POST', 'UPDATE', 'DELETE'])
+def delete_authors(authors):
+    for author in authors:
+        if author.books.all().count() < 2:
+            author.delete()
+
+
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def book_service(request: Request):
     if request.method == 'GET':
         title = request.query_params.get('title')
@@ -43,7 +50,7 @@ def book_service(request: Request):
 
         return Response([], status=status.HTTP_200_OK)
 
-    elif request.method == 'POST':
+    elif request.method == 'POST' or request.method == 'PUT':
         authors = list(Author.objects.filter(name__in=request.data.get('authors')))
         authorIds = []
         if len(authors) > 0:
@@ -53,7 +60,7 @@ def book_service(request: Request):
             for name in request.data.get('authors'):
                 author = {
                     "name": name,
-                    "books": list()
+                    "books": []
                 }
                 authors.append(author)
             authorSerializer = AuthorSerializer(data=authors, many=True)
@@ -62,17 +69,47 @@ def book_service(request: Request):
 
                 for author in authorSerializer.data:
                     authorIds.append(author.get('id'))
-            print('ERROR: book_service', authorSerializer.error_messages)
+            else:
+                print('ERROR: book_service', authorSerializer.error_messages)
+                print(authorSerializer.data)
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        bookData: dict = request.data
+        bookData['authors'] = authorIds
+        if request.method == 'POST':
+
+            serializer = BookWriteSerializer(data=bookData)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+
+            print('ERROR: book_service', serializer.error_messages)
+            print(serializer.data)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            book = Book.objects.get(id=bookData['id'])
+            bookData.pop('id')
+            oldAuthors: QuerySet = book.authors.exclude(id__in=authorIds)
+
+            serializer = BookWriteSerializer(instance=book, data=bookData)
+            if serializer.is_valid():
+                serializer.save()
+                delete_authors(oldAuthors)
+                return Response(status=status.HTTP_200_OK)
+            print('ERROR: book_service', serializer.error_messages)
+            print(serializer.data)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        book: dict = request.data
-        book['authors'] = authorIds
+    elif request.method == 'DELETE':
+        bookId = request.query_params.get('id')
+        try:
+            bookData: Book = Book.objects.get(id=bookId)
+            authors = bookData.authors.all()
 
-        serializer = BookWriteSerializer(data=book)
+            delete_authors(authors)
+            bookData.delete()
+        except Book.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
-
-        print('ERROR: book_service', serializer.error_messages)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_200_OK)
