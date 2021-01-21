@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 from rest_framework import routers
 
 from quickstart import views, bookViews
@@ -25,9 +26,10 @@ router.register(r'groups', views.GroupViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
+    path('', RedirectView.as_view(url='admin/')),   #todo: tu zrobić redirect do home page
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('book/all', bookViews.get_all),
-    path('book/', bookViews.book_service),
+    path('book/', bookViews.book_get),
+    path('book/manage', bookViews.book_mgmt),
 
 ]

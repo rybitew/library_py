@@ -1,6 +1,7 @@
 from django.db.models import QuerySet
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -23,34 +24,37 @@ def delete_authors(authors):
             author.delete()
 
 
-@api_view(['GET', 'POST', 'PUT', 'DELETE'])
-def book_service(request: Request):
-    if request.method == 'GET':
-        title = request.query_params.get('title')
-        author = request.query_params.get('author')
-        if title is not None and author is not None:
-            books = list(Book.objects.raw('SELECT b.* FROM quickstart_book b '
-                                          'JOIN quickstart_book_authors ba ON b.id = ba.book_id '
-                                          'JOIN quickstart_author a ON a.id = ba.author_id '
-                                          'WHERE b.title = %s COLLATE NOCASE AND a.name = %s COLLATE NOCASE',
-                                          [title, author]))
-        elif title is not None:
-            books = list(Book.objects.filter(title=title))
-        elif author is not None:
-            books = list(Book.objects.raw('SELECT b.* FROM quickstart_book b '
-                                          'JOIN quickstart_book_authors ba ON b.id = ba.book_id '
-                                          'JOIN quickstart_author a ON a.id = ba.author_id '
-                                          'WHERE a.name = %s COLLATE NOCASE',
-                                          [author]))
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        if books is not None:
-            serializer = BookReadSerializer(books, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+@api_view(['GET'])
+def book_get(request: Request):
+    title = request.query_params.get('title')
+    author = request.query_params.get('author')
+    if title is not None and author is not None:
+        books = list(Book.objects.raw('SELECT b.* FROM quickstart_book b '
+                                      'JOIN quickstart_book_authors ba ON b.id = ba.book_id '
+                                      'JOIN quickstart_author a ON a.id = ba.author_id '
+                                      'WHERE b.title = %s COLLATE NOCASE AND a.name = %s COLLATE NOCASE',
+                                      [title, author]))
+    elif title is not None:
+        books = list(Book.objects.filter(title=title))
+    elif author is not None:
+        books = list(Book.objects.raw('SELECT b.* FROM quickstart_book b '
+                                      'JOIN quickstart_book_authors ba ON b.id = ba.book_id '
+                                      'JOIN quickstart_author a ON a.id = ba.author_id '
+                                      'WHERE a.name = %s COLLATE NOCASE',
+                                      [author]))
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    if books is not None:
+        serializer = BookReadSerializer(books, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response([], status=status.HTTP_200_OK)
+    return Response([], status=status.HTTP_200_OK)
 
-    elif request.method == 'POST' or request.method == 'PUT':
+
+@api_view(['POST', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def book_mgmt(request: Request):
+    if request.method == 'POST' or request.method == 'PUT':
         authors = list(Author.objects.filter(name__in=request.data.get('authors')))
         authorIds = []
         if len(authors) > 0:
