@@ -1,0 +1,7 @@
+<div style="margin: 40px">
+<h1 style="display:flex; justify-content: center">Library app</h1>
+<h2 style="display:flex; justify-content: center" *ngIf="!isLoggedIn">Log in to rent books</h2>
+</div>
+<div *ngIf="isLoggedIn && dueBookAmount > 0" style="margin: 30px 40px">
+  <p style="display:flex; justify-content: center; font-size: 30px; color: red" >YOU HAVE {{dueBookAmount}} BOOKS DUE TO RETURN SOON</p>
+</div>

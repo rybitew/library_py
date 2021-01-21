@@ -1,0 +1,16 @@
+import {BookDto, RentingStatus} from './BookDto';
+
+export interface UserBooks {
+  rentedBooks: UserBook[];
+  returnedBooks: UserBook[];
+  dueBooks: UserBook[];
+}
+export interface UserBook {
+  id: number;
+  title: string;
+  authors: string[];
+  status: RentingStatus;
+  releaseDate: Date;
+  rentingDate: Date;
+  returnDate: Date;
+}

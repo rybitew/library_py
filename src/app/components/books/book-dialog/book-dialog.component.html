@@ -1,0 +1,36 @@
+<div class="container">
+  <h1 mat-dialog-title>{{getTitle()}}</h1>
+  <div mat-dialog-content>
+    <p *ngIf="data.action === 'delete'">Are you sure you want to delete {{data.book.title | titlecase}}?</p>
+    <div *ngIf="data.action === 'edit' || data.action === 'add'">
+      <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input matInput [(ngModel)]="data.book.title">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Authors</mat-label>
+
+        <textarea matInput
+                  cdkTextareaAutosize
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="5"
+                  [(ngModel)]="authors"
+        >
+      </textarea>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Release date</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="data.book.releaseDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button *ngIf="data.action === 'edit' || data.action === 'add'" (click)="save()" style="color: white; background: royalblue">
+      Save
+    </button>
+    <button mat-raised-button *ngIf="data.action === 'delete'" (click)="delete()" color="warn">Delete</button>
+  </div>
+</div>
