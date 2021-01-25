@@ -1,6 +1,9 @@
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
+from django.shortcuts import redirect
 from rest_framework import permissions
+from rest_framework import viewsets, status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from quickstart.serializers import UserSerializer, GroupSerializer
 
@@ -23,3 +26,6 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+def redirect_to_main(request):
+    return redirect('http://localhost:4200', permanent=True)

@@ -13,7 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.urls import path, include
 from django.views.generic import RedirectView
 from rest_framework import routers
@@ -25,11 +27,12 @@ router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(url='admin/')),   #todo: tu zrobić redirect do home page
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('book/all', bookViews.get_all),
-    path('book/', bookViews.book_get),
-    path('book/manage', bookViews.book_mgmt),
+    path(r'admin/', admin.site.urls),
+    path('accounts/profile/', views.redirect_to_main),   #todo: tu zrobić redirect do home page
+    path('', views.redirect_to_main),
+    path(r'api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/book/all', bookViews.get_all),
+    url('api/book/manage', bookViews.book_mgmt),
+    url('api/book', bookViews.book_get),
 
 ]
