@@ -19,6 +19,7 @@ from django.shortcuts import redirect
 from django.urls import path, include
 from django.views.generic import RedirectView
 from rest_framework import routers
+from rest_framework_jwt.views import obtain_jwt_token
 
 from quickstart import views, bookViews
 
@@ -28,11 +29,15 @@ router.register(r'groups', views.GroupViewSet)
 
 urlpatterns = [
     path(r'admin/', admin.site.urls),
-    path('accounts/profile/', views.redirect_to_main),   #todo: tu zrobić redirect do home page
-    path('', views.redirect_to_main),
-    path(r'api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api/book/all', bookViews.get_all),
+    # path('accounts/profile/', views.redirect_to_main),
+    # path('', views.redirect_to_main),
+    path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url('api/book/all', bookViews.get_all),
     url('api/book/manage', bookViews.book_mgmt),
     url('api/book', bookViews.book_get),
+    url('api/login', views.login),
+    url('api/register', views.register),
+    url('api/auth-login-token', obtain_jwt_token),
 
 ]
