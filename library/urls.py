@@ -15,11 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from django.shortcuts import redirect
 from django.urls import path, include
-from django.views.generic import RedirectView
 from rest_framework import routers
-from rest_framework_jwt.views import obtain_jwt_token
 
 from quickstart import views, bookViews
 
@@ -36,8 +33,6 @@ urlpatterns = [
     url('api/book/all', bookViews.get_all),
     url('api/book/manage', bookViews.book_mgmt),
     url('api/book', bookViews.book_get),
-    url('api/login', views.login),
-    url('api/register', views.register),
-    url('api/auth-login-token', obtain_jwt_token),
-
+    url('api/account/login', views.login),
+    url('api/account/register', views.register),
 ]

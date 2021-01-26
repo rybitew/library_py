@@ -45,16 +45,19 @@ def redirect_to_main(request):
 
 @api_view(['POST'])
 def login(request):
-    user: User = User.objects.get(username=request.data['username'])
-    if user is not None:
-        if user.check_password(request.data['password']):
-            jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-            jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+    try:
+        user: User = User.objects.get(username=request.data['username'])
+        if user is not None:
+            if user.check_password(request.data['password']):
+                jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+                jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
-            payload = jwt_payload_handler(user)
-            token = jwt_encode_handler(payload)
-            return Response(token, status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_401_UNAUTHORIZED)
+                payload = jwt_payload_handler(user)
+                token = jwt_encode_handler(payload)
+                return Response(token, status=status.HTTP_200_OK)
+        return Response("Invalid username or password", status=status.HTTP_401_UNAUTHORIZED)
+    except User.DoesNotExist or KeyError:
+        return Response("Invalid username or password", status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
@@ -67,5 +70,5 @@ def register(request):
         payload = jwt_payload_handler(user)
         token = jwt_encode_handler(payload)
         return Response(token, status=status.HTTP_201_CREATED)
-    except IntegrityError and KeyError:
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    except IntegrityError or KeyError:
+        return Response("Invalid credentials", status=status.HTTP_401_UNAUTHORIZED)
