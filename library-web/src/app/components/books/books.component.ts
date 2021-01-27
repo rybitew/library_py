@@ -3,7 +3,6 @@ import {BookService} from '../../Services/book.service';
 import {BookDto} from '../../models/BookDto';
 import {MatDialog} from '@angular/material/dialog';
 import {BookDialogComponent} from './book-dialog/book-dialog.component';
-import {AccountService} from '../../Services/account.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
 export interface BookDialogData {
@@ -18,18 +17,21 @@ export interface BookDialogData {
 })
 export class BooksComponent implements OnInit {
 
-  displayedColumns: string[] = ['title', 'authors', 'release date', 'status', 'actions'];
+  displayedColumns: string[] = ['id', 'title', 'authors', 'release date', 'status'];
   dataSource: BookDto[] = [];
   author: string;
   title: string;
-  role: string;
+  authenticated: boolean;
 
   constructor(private bookService: BookService, public dialog: MatDialog,
               private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
-    this.role = localStorage.getItem('role');
+    this.authenticated = !!localStorage.getItem('jwt');
+    if (this.authenticated) {
+      this.displayedColumns.push('actions');
+    }
   }
 
   search() {
@@ -63,7 +65,7 @@ export class BooksComponent implements OnInit {
       data: {book, action}
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(() => {
       this.search();
     });
   }

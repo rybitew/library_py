@@ -12,7 +12,7 @@
   <button mat-flat-button disableRipple style="margin: 5px" (click)="search()">
     SEARCH
   </button>
-  <button mat-flat-button disableRipple style="margin: 5px" (click)="add()">
+  <button mat-flat-button disableRipple style="margin: 5px" (click)="add()" *ngIf="authenticated">
     ADD
   </button>
 </div>
@@ -22,6 +22,11 @@
 </mat-card>
 <mat-card class="box-shadow" *ngIf="dataSource.length > 0" style="color: white; background: royalblue">
   <table id="table" mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> ID</th>
+      <td mat-cell *matCellDef="let book"><p> {{book.id}} </p></td>
+    </ng-container>
+
     <ng-container matColumnDef="title">
       <th mat-header-cell *matHeaderCellDef> Title</th>
       <td mat-cell *matCellDef="let book"><p> {{book.title}} </p></td>
@@ -43,14 +48,13 @@
       <td mat-cell *matCellDef="let book" class="id"> {{book.genre}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="actions">
+    <ng-container matColumnDef="actions" *ngIf="authenticated">
       <th mat-header-cell *matHeaderCellDef> Actions</th>
       <td mat-cell *matCellDef="let book" class="id">
-        <button mat-raised-button [disabled]="book.status === 0" (click)="rent(book.id)" *ngIf="role === 'USER'">RENT</button>
-        <button mat-icon-button (click)="edit(book)" *ngIf="role === 'ADMIN'">
+        <button mat-icon-button (click)="edit(book)">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button (click)="delete(book)" *ngIf="role === 'ADMIN'">
+        <button mat-icon-button (click)="delete(book)">
           <mat-icon>delete</mat-icon>
         </button>
       </td>

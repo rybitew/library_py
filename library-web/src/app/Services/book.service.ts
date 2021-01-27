@@ -1,5 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {BookDto} from '../models/BookDto';
 
@@ -41,10 +41,10 @@ export class BookService {
   }
 
   updateBook(id: number, book: BookDto): Observable<any> {
-    return this.http.put(this.API_URL + 'update/' + id, book, {headers: {Authorization: 'Bearer ' + localStorage.getItem('jwt')}});
+    return this.http.put(this.API_URL + '/manage', book, {headers: {Authorization: 'JWT ' + localStorage.getItem('jwt')}});
   }
 
   deleteBook(id: number): Observable<any> {
-    return this.http.delete(this.API_URL + 'delete/' + id, {headers: {Authorization: 'Bearer ' + localStorage.getItem('jwt')}});
+    return this.http.delete(this.API_URL + '/manage' + id, {headers: {Authorization: 'JWT ' + localStorage.getItem('jwt')}});
   }
 }
