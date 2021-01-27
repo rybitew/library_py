@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {BookDto} from '../../models/BookDto';
 
 @Component({
   selector: 'app-home',
