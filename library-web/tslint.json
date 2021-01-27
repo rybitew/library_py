@@ -61,7 +61,7 @@
     "no-switch-case-fall-through": true,
     "no-var-requires": false,
     "object-literal-key-quotes": [
-      true,
+      false,
       "as-needed"
     ],
     "quotemark": [
@@ -83,8 +83,7 @@
       }
     },
     "typedef": [
-      true,
-      "call-signature"
+      false
     ],
     "typedef-whitespace": {
       "options": [
@@ -108,6 +107,8 @@
       "options": [
         "ban-keywords",
         "check-format",
+        "allow-trailing-underscore",
+        "allow-leading-underscore",
         "allow-pascal-case"
       ]
     },
@@ -117,7 +118,6 @@
         "check-decl",
         "check-operator",
         "check-separator",
-        "check-type",
         "check-typecast"
       ]
     },
