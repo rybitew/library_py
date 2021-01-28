@@ -23,6 +23,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {LeafletModule} from '@asymmetrik/ngx-leaflet';
+import { MapComponent } from './components/map/map.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     HomeComponent,
     BooksComponent,
     AccountComponent,
-    BookDialogComponent
+    BookDialogComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
@@ -41,6 +44,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
       {path: '', component: HomeComponent, pathMatch: 'full'},
       {path: 'books', component: BooksComponent},
       {path: 'account', component: AccountComponent},
+      {path: 'map', component: MapComponent},
     ]),
     MatFormFieldModule,
     MatTableModule,
@@ -55,6 +59,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     MatNativeDateModule,
     MatSnackBarModule,
     MatToolbarModule,
+    LeafletModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
