@@ -1,9 +1,13 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {icon, latLng, LayerGroup, LeafletEvent, LeafletMouseEvent, Map, MapOptions, Marker, marker, tileLayer} from 'leaflet';
+import {Icon, icon, latLng, LayerGroup, LeafletEvent, LeafletMouseEvent, Map, MapOptions, Marker, marker, tileLayer} from 'leaflet';
 import 'esri-leaflet-geocoder/dist/esri-leaflet-geocoder';
 
 import * as ELG from 'esri-leaflet-geocoder';
 
+
+Icon.Default.mergeOptions({
+  shadowUrl: '../assets/marker-shadow.png'
+});
 
 @Component({
   selector: 'app-map',
@@ -14,6 +18,7 @@ export class MapComponent implements OnInit {
 
   address: string;
   marker;
+  foundMarker;
 
 
   @Output() map$: EventEmitter<Map> = new EventEmitter();
@@ -50,7 +55,9 @@ export class MapComponent implements OnInit {
       .on('results', (data) => {
         results.clearLayers();
         for (let i = data.results.length - 1; i >= 0; i--) {
-          results.addLayer(marker(data.results[i].latlng));
+          this.foundMarker = marker(data.results[i].latlng)
+            .bindPopup(data.results[i].text);
+          results.addLayer(this.foundMarker);
         }
       })
       .addTo(this.map);
@@ -62,14 +69,14 @@ export class MapComponent implements OnInit {
   }
 
   onMapClick(e: LeafletMouseEvent) {
-    // if (sessionStorage.getItem('JWT')) {
     new ELG.ReverseGeocode().latlng(e.latlng).run((error, result) => {
       if (error) {
         console.log();
         return;
       }
-      if (this.marker && this.map.hasLayer(this.marker))
+      if (this.marker && this.map.hasLayer(this.marker)) {
         this.map.removeLayer(this.marker);
+      }
       this.marker = new Marker(result.latlng)
         .addTo(this.map)
         .setIcon(icon({
@@ -80,10 +87,5 @@ export class MapComponent implements OnInit {
         .bindPopup(result.address.Match_addr)
         .openPopup();
     });
-    // }
-  }
-
-  search() {
-    return;
   }
 }
