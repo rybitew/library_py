@@ -1,7 +1,7 @@
 <header>
   <nav
     class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3 theme"
-    style="padding: 0"
+    style="padding: 0;"
   >
     <div class="container theme">
       <a [routerLink]="['/']"><h3>Library</h3></a>
@@ -33,6 +33,11 @@
           <li class="nav-item" [routerLinkActive]="['link-active']">
             <button mat-button>
               <a [routerLink]="['/books']">Books</a>
+            </button>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <button mat-button>
+              <a [routerLink]="['/map']">Map</a>
             </button>
           </li>
           <li class="nav-item">

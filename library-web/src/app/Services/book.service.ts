@@ -32,15 +32,12 @@ export class BookService {
   }
 
   addBook(book: BookDto): Observable<any> {
-    return this.http.post(this.API_URL + '/manage', {
-      title: book.title,
-      genre: book.genre,
-      authors: book.authors,
-      published: book.published
-    }, {headers: {Authorization: 'JWT ' + localStorage.getItem('jwt')}});
+    console.log('BOOK SERVICE -> addBook(): book', book);
+    return this.http.post(this.API_URL + '/manage', book, {headers: {Authorization: 'JWT ' + localStorage.getItem('jwt')}});
   }
 
   updateBook(id: number, book: BookDto): Observable<any> {
+    console.log('BOOK SERVICE -> addBook(): book', book);
     return this.http.put(this.API_URL + '/manage', book, {headers: {Authorization: 'JWT ' + localStorage.getItem('jwt')}});
   }
 

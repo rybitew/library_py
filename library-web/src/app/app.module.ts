@@ -20,9 +20,13 @@ import {BookDialogComponent} from './components/books/book-dialog/book-dialog.co
 import {MatDialogModule} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
+import {MatNativeDateModule, MatOptionModule} from '@angular/material/core';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {LeafletModule} from '@asymmetrik/ngx-leaflet';
+import {MapComponent} from './components/map/map.component';
+import {AddLibraryDialogComponent} from './components/map/add-library-dialog/add-library-dialog.component';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -31,7 +35,9 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     HomeComponent,
     BooksComponent,
     AccountComponent,
-    BookDialogComponent
+    BookDialogComponent,
+    AddLibraryDialogComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
@@ -41,6 +47,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
       {path: '', component: HomeComponent, pathMatch: 'full'},
       {path: 'books', component: BooksComponent},
       {path: 'account', component: AccountComponent},
+      {path: 'map', component: MapComponent},
     ]),
     MatFormFieldModule,
     MatTableModule,
@@ -55,6 +62,9 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     MatNativeDateModule,
     MatSnackBarModule,
     MatToolbarModule,
+    LeafletModule,
+    MatOptionModule,
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

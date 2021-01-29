@@ -3,12 +3,13 @@ from django.db import IntegrityError
 from django.shortcuts import redirect
 from rest_framework import permissions
 from rest_framework import viewsets, status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_jwt.settings import api_settings
 
-from quickstart.models import Book
-from quickstart.serializers import UserSerializer, GroupSerializer, BookReadSerializer
+from quickstart.models import Book, Library
+from quickstart.serializers import UserSerializer, GroupSerializer, BookReadSerializer, LibrarySerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -26,15 +27,6 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class BookViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Book.objects.all()
-    serializer_class = BookReadSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
@@ -72,3 +64,26 @@ def register(request):
         return Response(token, status=status.HTTP_201_CREATED)
     except IntegrityError or KeyError:
         return Response("Invalid credentials", status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(['GET'])
+def library_location(request):
+    libraries = Library.objects.all()
+    if libraries is not None:
+        serializer = LibrarySerializer(libraries, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response([], status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_library(request):
+    library = request.data
+    serializer = LibrarySerializer(data=library)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(status=status.HTTP_201_CREATED)
+
+    print('ERROR: library_location', serializer.error_messages)
+    print(serializer.data)
+    return Response("Invalid input data.", status=status.HTTP_400_BAD_REQUEST)

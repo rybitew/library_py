@@ -1,0 +1,20 @@
+<div class="container">
+  <h1 mat-dialog-title>Add library location</h1>
+  <div mat-dialog-content style="width: 100%">
+    <mat-form-field style="width: 100%">
+      <mat-label>Address</mat-label>
+      <input matInput required [(ngModel)]="address" style="width: 100%">
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+      <mat-label>Displayed address</mat-label>
+      <input matInput required [(ngModel)]="displayedAddress" style="width: 100%">
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button (click)="save()"
+            [ngStyle]="{'color': 'white', 'background': isDisabled() ? 'grey' : 'royalblue'}" [disabled]="isDisabled()">
+      Save
+    </button>
+  </div>
+</div>
