@@ -1,0 +1,22 @@
+.container {
+  margin-top: 20px;
+}
+mat-form-field {
+  display: flex;
+  justify-content: center;
+}
+.buttons {
+  display: flex;
+  justify-content: center;
+}
+.first-btn {
+  font-size: 18px;
+  font-weight: bold;
+  width: 180px;
+}
+.second-btn {
+  width: 120px;
+}
+button {
+  margin: 5px;
+}

@@ -28,6 +28,7 @@ def delete_authors(authors):
 def book_get(request: Request):
     title = request.query_params.get('title')
     author = request.query_params.get('author')
+    id = request.query_params.get('id')
     if title is not None and author is not None:
         books = list(Book.objects.raw('SELECT b.* FROM quickstart_book b '
                                       'JOIN quickstart_book_authors ba ON b.id = ba.book_id '
@@ -42,6 +43,8 @@ def book_get(request: Request):
                                       'JOIN quickstart_author a ON a.id = ba.author_id '
                                       'WHERE a.name = %s COLLATE NOCASE',
                                       [author]))
+    elif id is not None:
+        books = [Book.objects.get(id=id)]
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
     if books is not None:
@@ -80,6 +83,7 @@ def book_mgmt(request: Request):
 
         bookData: dict = request.data
         bookData['authors'] = authorIds
+        bookData['published'] = bookData['published'].split('T')[0]
         if request.method == 'POST':
 
             serializer = BookWriteSerializer(data=bookData)
