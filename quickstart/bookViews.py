@@ -36,7 +36,7 @@ def book_get(request: Request):
                                       'WHERE b.title = %s COLLATE NOCASE AND a.name = %s COLLATE NOCASE',
                                       [title, author]))
     elif title is not None:
-        books = list(Book.objects.filter(title=title))
+        books = list(Book.objects.filter(title__iexact=title))
     elif author is not None:
         books = list(Book.objects.raw('SELECT b.* FROM quickstart_book b '
                                       'JOIN quickstart_book_authors ba ON b.id = ba.book_id '
