@@ -17,7 +17,7 @@ export interface BookDialogData {
 })
 export class BooksComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'title', 'authors', 'release date', 'status'];
+  displayedColumns: string[] = ['id', 'title', 'authors', 'release date', 'genre', 'library'];
   dataSource: BookDto[] = [];
   author: string;
   title: string;
@@ -61,7 +61,7 @@ export class BooksComponent implements OnInit {
 
   openDialog(book: BookDto, action: string): void {
     const dialogRef = this.dialog.open(BookDialogComponent, {
-      width: '350px',
+      width: '50%',
       data: {book, action}
     });
 

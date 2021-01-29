@@ -23,7 +23,6 @@ from quickstart import views, bookViews
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
-
 urlpatterns = [
     path(r'admin/', admin.site.urls),
     # path('accounts/profile/', views.redirect_to_main),
@@ -35,6 +34,7 @@ urlpatterns = [
     url('api/book', bookViews.book_get),
     url('api/account/login', views.login),
     url('api/account/register', views.register),
-    url('api/location', views.add_library),
     url('api/location/all', views.library_location),
+    url('api/location', views.add_library),
 ]
+

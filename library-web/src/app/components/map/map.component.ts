@@ -3,11 +3,7 @@ import {Icon, icon, latLng, LayerGroup, LeafletEvent, LeafletMouseEvent, Map, Ma
 import 'esri-leaflet-geocoder/dist/esri-leaflet-geocoder';
 
 import * as ELG from 'esri-leaflet-geocoder';
-import {noop} from 'rxjs';
-import {BookDto} from '../../models/BookDto';
-import {BookDialogComponent} from '../books/book-dialog/book-dialog.component';
 import {AddLibraryDialogComponent} from './add-library-dialog/add-library-dialog.component';
-import {BookService} from '../../Services/book.service';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MapService} from '../../Services/map.service';
@@ -48,6 +44,17 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.mapService.getAllLibraryLocations().subscribe(response =>
+      response.forEach(lib => {
+        new Marker([lib.latitude, lib.longitude])
+          .addTo(this.map)
+          .setIcon(icon({
+            iconSize: [25, 41],
+            iconAnchor: [13, 41],
+            iconUrl: 'assets/local_library-24px.svg'
+          }))
+          .bindPopup(lib.displayedAddress);
+      }), error => this.toast(error.error));
   }
 
   onMapReady(map: Map) {

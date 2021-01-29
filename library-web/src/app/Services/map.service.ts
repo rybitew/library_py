@@ -22,6 +22,6 @@ export class MapService {
   }
 
   getAllLibraryLocations() {
-    return this.http.get(this.API_URL + '/all');
+    return this.http.get<LibraryLocationDto[]>(this.API_URL + '/all');
   }
 }

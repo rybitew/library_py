@@ -68,7 +68,11 @@ def register(request):
 
 @api_view(['GET'])
 def library_location(request):
-    return Response(Library.objects.all(), status=status.HTTP_200_OK)
+    libraries = Library.objects.all()
+    if libraries is not None:
+        serializer = LibrarySerializer(libraries, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response([], status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -82,4 +86,4 @@ def add_library(request):
 
     print('ERROR: library_location', serializer.error_messages)
     print(serializer.data)
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+    return Response("Invalid input data.", status=status.HTTP_400_BAD_REQUEST)

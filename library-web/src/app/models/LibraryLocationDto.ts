@@ -1,6 +1,7 @@
 export interface LibraryLocationDto {
   placeId: number;
-  lon: number;
-  lat: number;
+  longitude: number;
+  latitude: number;
   name: string;
+  displayedAddress: string;
 }

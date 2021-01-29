@@ -16,6 +16,12 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'name']
 
 
+class LibrarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Library
+        fields = ['placeId', 'name', 'latitude', 'longitude', 'displayedAddress']
+
+
 class BookWriteSerializer(serializers.ModelSerializer):
     authors = serializers.PrimaryKeyRelatedField(queryset=Author.objects.all(), many=True)
 
@@ -26,6 +32,7 @@ class BookWriteSerializer(serializers.ModelSerializer):
 
 class BookReadSerializer(serializers.ModelSerializer):
     authors = serializers.StringRelatedField(many=True, read_only=True)
+    library = LibrarySerializer()
 
     class Meta:
         model = Book
@@ -38,11 +45,3 @@ class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
         fields = ['id', 'name', 'books']
-
-
-class LibrarySerializer(serializers.ModelSerializer):
-    # books = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=True)
-
-    class Meta:
-        model = Library
-        fields = ['placeId', 'name', 'latitude', 'longitude']

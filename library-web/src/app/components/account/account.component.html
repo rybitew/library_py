@@ -1,19 +1,19 @@
 <div class="container">
   <mat-form-field>
     <mat-label>Username</mat-label>
-    <input matInput [(ngModel)]="username">
+    <input matInput required [(ngModel)]="username">
   </mat-form-field>
   <mat-form-field *ngIf="isRegister">
     <mat-label>E-mail</mat-label>
-    <input type="email" matInput [(ngModel)]="email">
+    <input type="email" matInput required [(ngModel)]="email">
   </mat-form-field>
   <mat-form-field>
     <mat-label>Password</mat-label>
-    <input type="password" matInput [(ngModel)]="password">
+    <input type="password" matInput required [(ngModel)]="password">
   </mat-form-field>
   <mat-form-field *ngIf="isRegister">
     <mat-label>Confirm password</mat-label>
-    <input type="password" matInput [(ngModel)]="confirmPassword">
+    <input type="password" matInput required [(ngModel)]="confirmPassword">
   </mat-form-field>
 
   <div class="buttons">
