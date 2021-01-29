@@ -3,6 +3,14 @@ import {Icon, icon, latLng, LayerGroup, LeafletEvent, LeafletMouseEvent, Map, Ma
 import 'esri-leaflet-geocoder/dist/esri-leaflet-geocoder';
 
 import * as ELG from 'esri-leaflet-geocoder';
+import {noop} from 'rxjs';
+import {BookDto} from '../../models/BookDto';
+import {BookDialogComponent} from '../books/book-dialog/book-dialog.component';
+import {AddLibraryDialogComponent} from './add-library-dialog/add-library-dialog.component';
+import {BookService} from '../../Services/book.service';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MapService} from '../../Services/map.service';
 
 
 Icon.Default.mergeOptions({
@@ -35,7 +43,8 @@ export class MapComponent implements OnInit {
   public map: Map;
   public zoom: number;
 
-  constructor() {
+  constructor(private mapService: MapService, public dialog: MatDialog,
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -86,6 +95,18 @@ export class MapComponent implements OnInit {
         }))
         .bindPopup(result.address.Match_addr)
         .openPopup();
+    });
+  }
+
+  openAddLibrary(): void {
+    const dialogRef = this.dialog.open(AddLibraryDialogComponent, {
+      width: '350px',
+    });
+  }
+
+  toast(message: string) {
+    this.snackBar.open(message, 'OK', {
+      duration: 2000,
     });
   }
 }

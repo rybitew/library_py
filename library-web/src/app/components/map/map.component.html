@@ -5,5 +5,10 @@
        (leafletMapZoomEnd)="onMapZoomEnd($event)"
        (leafletDoubleClick)="onMapClick($event)"
   >
+    <div class="leaflet-top leaflet-right" style="z-index: 1000">
+      <button mat-flat-button disableRipple class="leaflet-control" style="margin: 10px" (click)="openAddLibrary()">
+        Add library
+      </button>
+    </div>
   </div>
 </div>

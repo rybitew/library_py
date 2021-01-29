@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
-from quickstart.models import Book, Author
+from quickstart.models import Book, Author, Library
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,7 +21,7 @@ class BookWriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ['title', 'genre', 'published', 'authors']
+        fields = ['title', 'genre', 'published', 'authors', 'library']
 
 
 class BookReadSerializer(serializers.ModelSerializer):
@@ -29,7 +29,7 @@ class BookReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ['id', 'title', 'genre', 'published', 'authors']
+        fields = ['id', 'title', 'genre', 'published', 'authors', 'library']
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -38,3 +38,11 @@ class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
         fields = ['id', 'name', 'books']
+
+
+class LibrarySerializer(serializers.ModelSerializer):
+    # books = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=True)
+
+    class Meta:
+        model = Library
+        fields = ['placeId', 'name', 'latitude', 'longitude']

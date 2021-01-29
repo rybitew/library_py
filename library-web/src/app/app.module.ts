@@ -25,6 +25,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 import { MapComponent } from './components/map/map.component';
+import {AddLibraryDialogComponent} from './components/map/add-library-dialog/add-library-dialog.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { MapComponent } from './components/map/map.component';
     BooksComponent,
     AccountComponent,
     BookDialogComponent,
+    AddLibraryDialogComponent,
     MapComponent
   ],
   imports: [

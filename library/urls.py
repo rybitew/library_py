@@ -35,4 +35,6 @@ urlpatterns = [
     url('api/book', bookViews.book_get),
     url('api/account/login', views.login),
     url('api/account/register', views.register),
+    url('api/location', views.add_library),
+    url('api/location/all', views.library_location),
 ]
